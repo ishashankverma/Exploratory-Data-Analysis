@@ -377,7 +377,7 @@ cor.test(wine$volatile.acidity, wine$citric.acid)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Bivariate_Plots_7}
 # Boxplot for examining chlorides and quality closely
-ggplot(data=wine, aes(y=chlorides, x=quality)) +
+ggplot(data=wine, aes(x=quality, y=chlorides)) +
   geom_boxplot()
 
 ```
@@ -396,7 +396,7 @@ though there are a few outliers.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Bivariate_Plots_9}
 # Examining the sulphate levels
-ggplot(data=wine, aes(y=sulphates, x=quality)) +
+ggplot(data=wine, aes(x=quality, y=sulphates)) +
   geom_boxplot()
 
 ```
@@ -407,7 +407,7 @@ concentration of sulphates.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Bivariate_Plots_10}
 #  Alcohol level
-ggplot(data=wine, aes(y=alcohol, x=quality)) + 
+ggplot(data=wine, aes(x=quality, y=alcohol)) + 
   geom_boxplot()
 ```
 
@@ -462,26 +462,21 @@ cor.test(wine$free.sulfur.dioxide, wine$total.sulfur.dioxide)
 features that were highly correlated with quality are plotted below.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Multivariate_Plots_1}
-ggplot(data = wine,
-       aes(x = alcohol, y = density,
-           color = quality)) +
+ggplot(data = wine, aes(x = alcohol, y = density, color = quality)) +
   geom_point() +
   scale_color_brewer()
 
 ggplot(data = wine,
-       aes(x = citric.acid, y = volatile.acidity,
-           color = quality)) +
+       aes(x = citric.acid, y = volatile.acidity, color = quality)) +
   geom_point() +
   scale_color_brewer()
 
 ggplot(data = wine,
-       aes(x = alcohol, y = sulphates,
-           color = quality)) +
+       aes(x = alcohol, y = sulphates, color = quality)) +
   geom_point() +
   scale_color_brewer()
 
-ggplot(data = wine,
-       aes(x = pH, y = alcohol, color = quality)) +
+ggplot(data = wine, aes(x = pH, y = alcohol, color = quality)) +
   geom_point() +
   scale_color_brewer()
 ```
@@ -491,29 +486,26 @@ point out the differences between good, average and bad wines.
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Multivariate_Plots_2}
-ggplot(data = wine,
-       aes(x = alcohol, y = density,
-           color = quality)) +
+ggplot(data = wine, aes(x = alcohol, y = density, 
+                        color = quality)) +
   geom_point() +
   facet_wrap(~rating) + 
   scale_color_brewer()
 
-ggplot(data = wine,
-       aes(x = citric.acid, y = volatile.acidity,
-           color = quality)) +
+ggplot(data = wine, aes(x = citric.acid, y = volatile.acidity, 
+                        color = quality)) +
   geom_point() +
   facet_wrap(~rating) + 
   scale_color_brewer()
 
-ggplot(data = wine,
-       aes(x = alcohol, y = sulphates,
-           color = quality)) +
+ggplot(data = wine, aes(x = alcohol, y = sulphates, 
+                        color = quality)) +
   geom_point() +
   facet_wrap(~rating) + 
   scale_color_brewer()
 
-ggplot(data = wine,
-       aes(x = pH, y = alcohol, color = quality)) +
+ggplot(data = wine, aes(x = pH, y = alcohol, 
+                        color = quality)) +
   geom_point() +
   facet_wrap(~rating) + 
   scale_color_brewer()
