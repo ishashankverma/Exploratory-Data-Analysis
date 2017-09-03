@@ -3,3 +3,4 @@ Scale Brewer - http://ggplot2.tidyverse.org/reference/scale_brewer.html
 TidyR - https://blog.rstudio.com/2014/07/22/introducing-tidyr/
 Reshape - http://www.statmethods.net/management/reshape.html
 Daring Fireball Markdown - https://daringfireball.net/projects/markdown/syntax
+https://en.wikipedia.org/wiki/Acids_in_wine
