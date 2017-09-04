@@ -87,6 +87,15 @@ Now, I'll draw quick histograms of all the features for showing the \
 distributions of the variables.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Univariate_Plots_1}
+ggplot(wine, aes(x = quality)) +
+  geom_histogram(stat = "count")
+```
+
+The distribution of quality seems to be normally distributed with a large \
+amount of data towards the center of the distribution. Very few wines have \
+the quality as 3 or 8.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Univariate_Plots_2}
 hist_1_var <- function(x.var, df = wine){
   ggplot(df, aes_string(x = x.var)) +
     geom_histogram()
@@ -117,7 +126,7 @@ total sulfur dioxide and alcohol seem to be positively skewed.
 Here are some quick box plots for all the numerical variables. We can \
 visualize the outliers here.
  
-```{r echo=FALSE, message=FALSE, warning=FALSE, Univariate_Plots_2}
+```{r echo=FALSE, message=FALSE, warning=FALSE, Univariate_Plots_3}
 meltData <- melt(wine[2:13])
 ggplot(meltData, aes(factor(variable), value))+ 
   geom_boxplot() + facet_wrap(~variable, scale="free")
@@ -128,13 +137,6 @@ residual.sugar seem to have a large number of outliers.
 
 To understand the difference in the distributions of pH and the various acidic \
 concentrations, we will draw log base 10 plots to analyse further.
-
-```{r echo=FALSE, message=FALSE, warning=FALSE, Univariate_Plots_3}
-fix_ac_plot + scale_x_log10()
-```
-
-Now, the distribution appears to be normal, with a few variations. It appears \
-to be in sync with the pH distribution.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Univariate_Plots_4}
 vol_ac_plot + scale_x_log10()
@@ -189,11 +191,7 @@ sul_quant_plot <- sul_plot +
   scale_x_continuous(lim = c(0, quantile(wine$sulphates, 0.95))) +
   xlab('sulphates, 95th percentile truncated')
 
-sul_quant_log_plot <- sul_quant_plot + 
-  scale_x_log10() + 
-  xlab('sulphates, log10')
-
-grid.arrange(sul_plot, sul_quant_plot, sul_quant_log_plot, ncol=1)
+grid.arrange(sul_plot, sul_quant_plot, ncol=1)
 ```
 
 Sulphates plot appears to be positively skewed.
@@ -234,7 +232,23 @@ in better visualising the quality of wines.
 
 # Bivariate Plots Section
 
+```{r echo=FALSE, message=FALSE, warning=FALSE, Bivariate_Cor_Vis}
+# Visualizing correlation of all numeric features
+ggcorr(wine[2:13], geom = "blank", hjust = 0.75, label = TRUE) +
+  geom_point(size = 10, 
+             aes(color = coefficient > 0, alpha = abs(coefficient) > 0.5)) +
+  scale_alpha_manual(values = c("TRUE" = 0.25, "FALSE" = 0)) +
+  guides(color = FALSE, alpha = FALSE)
+```
+
+Above is the visualization of the correlation of our variables. We can see \
+here that the free sulfur dioxide and total sulfur dioxide are positively \
+correlated to each other. pH has strong negative correlation with citric \
+acid and fixed acidity. volatile acidity has negative correlation with \
+citric acid and positive correlation with fixed acidity.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Bivariate_Cors}
+# Printing the correlation of all the features with each other
 cor(
   wine %>%
     # first we remove unwanted columns
@@ -505,16 +519,20 @@ suggests that the quality of wine depends on the type of acids present in it.
 ggplot(data = wine, aes(x = citric.acid, y = fixed.acidity, 
                         color = rating)) +
   geom_point(alpha = 1/2) +
-  scale_color_brewer()
+  geom_smooth(method = "lm", se = FALSE,size=1)  +
+  scale_color_brewer(type='seq',
+                   guide=guide_legend(title='Rating'))
 ```
 
 Rating of the wine increases with the increase in fixed acidity and citric acid.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Multivariate_Plots_7}
 ggplot(data = wine, aes(x = alcohol, y = sulphates, 
-                        color = rating)) +
+                        color = factor(quality))) +
   geom_point(alpha = 1/3) +
-  scale_color_brewer()
+  geom_smooth(method = "lm", se = FALSE,size=1)  +
+  scale_color_brewer(type='seq',
+                   guide=guide_legend(title='Quality'))
 ```
 
 Good wines have a high alochol content and high sulphate concentration.
@@ -573,13 +591,15 @@ This boxplot shows how alcohol is a major influence on the quality of wines.
 
 ### Plot Two
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Final_Plot_2}
-ggplot(data = wine, aes(x = alcohol, y = sulphates, color = rating)) +
+ggplot(data = wine, aes(x = alcohol, y = sulphates, color = factor(quality))) +
   geom_point(alpha = 1/2) +
   scale_y_continuous(limits=c(0.3, 1.5)) +
   ylab("Potassium Sulphate (g/dm^3)") +
   xlab("Alcohol (% by Volume)") +
   ggtitle("Alcohol and Sulphates over Wine Quality") + 
-  scale_color_brewer()
+  geom_smooth(method = "lm", se = FALSE,size=1)  +
+  scale_color_brewer(type='seq',
+                   guide=guide_legend(title='Quality'))
 ```
 
 
@@ -614,7 +634,8 @@ p4 = ggplot(data = wine, aes(x = quality, y = pH,
   ylab('pH') +
   geom_boxplot()
 
-grid.arrange(p1, p2, p3, p4, ncol = 2)
+title=textGrob("Acidity Features over Wine Quality", gp=gpar(fontsize = 14))
+grid.arrange(p1, p2, p3, p4, ncol = 2, top = title)
 ```
 
 ### Description Three
